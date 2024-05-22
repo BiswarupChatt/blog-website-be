@@ -24,10 +24,10 @@ const userRegisterValidation = {
     email: {
         in: ['body'],
         exists: {
-            errorMessage: 'Email Name is required'
+            errorMessage: 'Email is required'
         },
         notEmpty: {
-            errorMessage: 'Email Name cannot be empty'
+            errorMessage: 'Email cannot be empty'
         },
         isEmail: {
             errorMessage: 'Email should be in a valid format'
@@ -48,10 +48,10 @@ const userRegisterValidation = {
     password: {
         in: ['body'],
         exists: {
-            errorMessage: 'Password Name is required'
+            errorMessage: 'Password is required'
         },
         notEmpty: {
-            errorMessage: 'Password Name cannot be empty'
+            errorMessage: 'Password cannot be empty'
         },
         isLength: {
             options: {
@@ -60,7 +60,93 @@ const userRegisterValidation = {
             errorMessage: 'Password should be between 8-128 character'
         },
         trim: true
-    },
+    }
 }
 
-module.exports = { userRegisterValidation }
+const userLoginValidation = {
+    email: {
+        in: ['body'],
+        exists: {
+            errorMessage: 'Email is required'
+        },
+        notEmpty: {
+            errorMessage: 'Email cannot be empty'
+        },
+        isEmail: {
+            errorMessage: 'Email should be in a valid format'
+        },
+        trim: true,
+        normalizeEmail: true
+    },
+    password: {
+        in: ['body'],
+        exists: {
+            errorMessage: 'Password is required'
+        },
+        notEmpty: {
+            errorMessage: 'Password cannot be empty'
+        },
+        isLength: {
+            options: {
+                min: 8, max: 128
+            },
+            errorMessage: 'Password should be between 8-128 character'
+        },
+        trim: true
+    }
+}
+
+const userUpdateValidation = {
+    firstName: {
+        in: ['body'],
+        exists: {
+            errorMessage: 'First Name is required'
+        },
+        notEmpty: {
+            errorMessage: 'First Name cannot be empty'
+        },
+        trim: true
+    },
+    lastName: {
+        in: ['body'],
+        exists: {
+            errorMessage: 'Last Name is required'
+        },
+        notEmpty: {
+            errorMessage: 'Last Name cannot be empty'
+        },
+        trim: true
+    },
+    email: {
+        in: ['body'],
+        exists: {
+            errorMessage: 'Email is required'
+        },
+        notEmpty: {
+            errorMessage: 'Email cannot be empty'
+        },
+        isEmail: {
+            errorMessage: 'Email should be in a valid format'
+        },
+        trim: true,
+        normalizeEmail: true
+    },
+    password: {
+        in: ['body'],
+        exists: {
+            errorMessage: 'Password is required'
+        },
+        notEmpty: {
+            errorMessage: 'Password cannot be empty'
+        },
+        isLength: {
+            options: {
+                min: 8, max: 128
+            },
+            errorMessage: 'Password should be between 8-128 character'
+        },
+        trim: true
+    }
+}
+
+module.exports = { userRegisterValidation, userLoginValidation, userUpdateValidation }
