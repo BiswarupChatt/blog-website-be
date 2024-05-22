@@ -12,6 +12,8 @@ const userCtrl = require('./app/controllers/user-ctrl')
 
 const { userRegisterValidation } = require('./app/validations/user-validations')
 
+const upload = require('./app/middlewares/multerConfig')
+
 const app = express()
 const port = process.env.PORT
 
@@ -21,7 +23,7 @@ app.use(express.json())
 app.use(morgan('common'))
 app.use(cors())
 
-app.post('/api/users/register', checkSchema(userRegisterValidation), userCtrl.register)
+app.post('/api/users/register', upload.single('profileImage'), checkSchema(userRegisterValidation), userCtrl.register)
 
 app.listen(port, () => {
     console.log(`server is running successfully on this url http://localhost:${port}`)
