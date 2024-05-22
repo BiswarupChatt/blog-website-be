@@ -12,7 +12,7 @@ const userCtrl = require('./app/controllers/user-ctrl')
 
 const { userRegisterValidation } = require('./app/validations/user-validations')
 
-const upload = require('./app/middlewares/multerConfig')
+const { upload } = require('./app/middlewares/multerConfig')
 
 const app = express()
 const port = process.env.PORT

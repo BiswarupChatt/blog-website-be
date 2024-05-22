@@ -2,6 +2,7 @@ const User = require('../models/user-model')
 const { validationResult } = require('express-validator')
 const bcryptjs = require('bcryptjs')
 const { welcomeEmail } = require('../utility/nodemailer')
+const { cloudinary } = require('../middlewares/multerConfig')
 
 const userCtrl = {}
 
@@ -17,9 +18,21 @@ userCtrl.register = async (req, res) => {
         const user = new User({ ...body, password: hashPassword })
 
         if (req.file) {
-            user.profileImage = req.file.path
+            const result = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    {folder: 'user_profiles'},
+                    (error, result)=>{
+                        if(error){
+                            reject(error)
+                        }else{
+                            resolve(result)
+                        }
+                    }
+                ).end(req.file.buffer)
+            })
+            user.profileImage = result.secure_url
         }
-        
+
         await user.save()
         const newUser = await User.findOne({ email: req.body.email })
         if (newUser) {
