@@ -35,7 +35,7 @@ app.put('/api/users/profile/imageUpdate', authenticateUser, upload.single('profi
 app.post('/api/posts', authenticateUser, checkSchema(postValidation), postCtrl.create)
 app.get('/api/posts',  postCtrl.findAll)
 app.get('/api/posts/:id',  postCtrl.findById)
-app.get('/api/posts/:id', authenticateUser, checkSchema(postValidation),  postCtrl.update)
+app.put('/api/posts/:id', authenticateUser, checkSchema(postValidation),  postCtrl.update)
 
 
 app.listen(port, () => {
