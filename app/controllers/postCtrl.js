@@ -1,5 +1,6 @@
 const Post = require('../models/post-model')
 const { validationResult } = require('express-validator')
+const _ = require('lodash')
 
 const postCtrl = {}
 
@@ -60,9 +61,9 @@ postCtrl.update = async (req, res) => {
         const body = _.pick(req.body, ['title', 'content'])
         const postId = req.params.id
         const post = await Post.findById(postId)
-        if (post.author === req.user.id) {
+        if (parseInt(post.author) === parseInt(req.user.id)) {
             const newPost = await Post.findByIdAndUpdate(postId, body, { new: true })
-            return res.status(201).json(newPost)
+            return res.status(200).json(newPost)
         } else {
             return res.status(500).json({ errors: "You're not authorized to update" })
         }

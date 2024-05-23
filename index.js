@@ -4,7 +4,7 @@ const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 
-const { checkSchema, check } = require('express-validator')
+const { checkSchema } = require('express-validator')
 
 const configureDB = require('./config/db')
 
@@ -12,7 +12,7 @@ const userCtrl = require('./app/controllers/user-ctrl')
 const postCtrl = require('./app/controllers/postCtrl')
 
 const { userRegisterValidation, userLoginValidation, userUpdateValidation } = require('./app/validations/user-validations')
-const {postValidation} = require('./app/validations/post-validations')
+const { postValidation } = require('./app/validations/post-validations')
 
 const { upload } = require('./app/middlewares/multerConfig')
 const authenticateUser = require('./app/middlewares/authenticateUser')
@@ -33,9 +33,9 @@ app.put('/api/users/profile', authenticateUser, checkSchema(userUpdateValidation
 app.put('/api/users/profile/imageUpdate', authenticateUser, upload.single('profileImage'), userCtrl.profileImageUpdate)
 
 app.post('/api/posts', authenticateUser, checkSchema(postValidation), postCtrl.create)
-app.get('/api/posts',  postCtrl.findAll)
-app.get('/api/posts/:id',  postCtrl.findById)
-app.put('/api/posts/:id', authenticateUser, checkSchema(postValidation),  postCtrl.update)
+app.get('/api/posts', postCtrl.findAll)
+app.get('/api/posts/:id', postCtrl.findById)
+app.put('/api/posts/:id', authenticateUser, checkSchema(postValidation), postCtrl.update)
 
 
 app.listen(port, () => {
