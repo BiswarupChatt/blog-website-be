@@ -20,7 +20,7 @@ userCtrl.register = async (req, res) => {
         const user = new User({ ...body, password: hashPassword })
 
         await user.save()
-        
+
         const newUser = await User.findOne({ email: req.body.email })
         if (newUser) {
             welcomeEmail(newUser.email, newUser.firstName)
@@ -101,12 +101,12 @@ userCtrl.profileImageUpdate = async (req, res) => {
     }
 
     try {
-        const body = _.pick(req.body, ['_id', 'profileImage'])
-
         if (req.file) {
+            const body = _.pick(req.body, ['profileImage'])
+
             const result = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream(
-                    { folder: 'user_profiles' },
+                    { folder: 'blog_website/user_profiles' },
                     (error, result) => {
                         if (error) {
                             reject(error)
@@ -121,6 +121,8 @@ userCtrl.profileImageUpdate = async (req, res) => {
 
             const user = await User.findByIdAndUpdate(req.user.id, body, { new: true })
             return res.status(201).json(_.pick(user, ['_id', 'profileImage']))
+        } else {
+            return res.status(500).json({ errors: "Unable to find image" })
         }
 
     } catch (err) {
