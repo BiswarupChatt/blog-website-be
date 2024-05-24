@@ -3,16 +3,17 @@ require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-
 const { checkSchema } = require('express-validator')
 
 const configureDB = require('./config/db')
 
 const userCtrl = require('./app/controllers/user-ctrl')
 const postCtrl = require('./app/controllers/postCtrl')
+const commentCtrl = require('./app/controllers/commentCtrl')
 
 const { userRegisterValidation, userLoginValidation, userUpdateValidation } = require('./app/validations/user-validations')
 const { postValidation } = require('./app/validations/post-validations')
+const { commentValidations } = require('./app/validations/comment-validations')
 
 const { upload } = require('./app/middlewares/multerConfig')
 const authenticateUser = require('./app/middlewares/authenticateUser')
@@ -40,6 +41,10 @@ app.put('/api/posts/:id', authenticateUser, checkSchema(postValidation), postCtr
 app.delete('/api/posts/:id', authenticateUser, postCtrl.delete)
 app.put('/api/posts/:id/imageUpdate', authenticateUser, upload.single('bannerImage'), postCtrl.bannerImageUpdate)
 
+app.post('/api/posts/:postId/comments', authenticateUser, checkSchema(commentValidations), commentCtrl.create)
+app.get('/api/posts/:postId/comments', commentCtrl.find)
+app.put('/api/posts/:postId/comments/:commentId', authenticateUser, checkSchema(commentValidations), commentCtrl.update)
+app.delete('/api/posts/:postId/comments/:commentId', authenticateUser, commentCtrl.delete)
 
 app.listen(port, () => {
     console.log(`server is running successfully on this url http://localhost:${port}`)

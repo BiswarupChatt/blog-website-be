@@ -108,7 +108,6 @@ postCtrl.delete = async (req, res) => {
     }
 }
 
-
 postCtrl.bannerImageUpdate = async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
