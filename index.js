@@ -21,6 +21,7 @@ const authenticateUser = require('./app/middlewares/authenticateUser')
 const app = express()
 const port = process.env.PORT
 
+
 configureDB()
 
 app.use(express.json())

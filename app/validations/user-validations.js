@@ -130,22 +130,6 @@ const userUpdateValidation = {
         },
         trim: true,
         normalizeEmail: true
-    },
-    password: {
-        in: ['body'],
-        exists: {
-            errorMessage: 'Password is required'
-        },
-        notEmpty: {
-            errorMessage: 'Password cannot be empty'
-        },
-        isLength: {
-            options: {
-                min: 8, max: 128
-            },
-            errorMessage: 'Password should be between 8-128 character'
-        },
-        trim: true
     }
 }
 

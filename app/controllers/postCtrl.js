@@ -120,7 +120,12 @@ postCtrl.bannerImageUpdate = async (req, res) => {
 
             const result = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream(
-                    { folder: 'blog_website/post_images' },
+                    { folder: 'blog_website/post_images',
+                    quality: 'auto',
+                    transformation: [
+                        {width: 800, crop: 'limit'}
+                    ]
+                    },
                     (err, result) => {
                         if (err) {
                             reject(err)
