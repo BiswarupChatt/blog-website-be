@@ -19,9 +19,9 @@ const postValidation = {
         },
         isLength: {
             options: {
-                min: 10
+                min: 200
             },
-            errorMessage: 'Content Should be minimum 100 characters long'
+            errorMessage: 'Content Should be minimum 200 characters long'
         },
         trim: true
     },

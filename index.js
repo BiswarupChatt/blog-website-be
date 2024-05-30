@@ -40,7 +40,6 @@ app.get('/api/posts/my-posts', authenticateUser, postCtrl.myPosts)
 app.get('/api/posts/:id', postCtrl.findById)
 app.put('/api/posts/:id', authenticateUser, upload.single('bannerImage'), checkSchema(postValidation), postCtrl.update)
 app.delete('/api/posts/:id', authenticateUser, postCtrl.delete)
-// app.put('/api/posts/:id/imageUpdate', authenticateUser, upload.single('bannerImage'), postCtrl.bannerImageUpdate)
 
 app.post('/api/posts/:postId/comments', authenticateUser, checkSchema(commentValidations), commentCtrl.create)
 app.get('/api/posts/:postId/comments', commentCtrl.find)

@@ -1,6 +1,5 @@
 const Post = require('../models/post-model')
 const { validationResult } = require('express-validator')
-const _ = require('lodash')
 const { cloudinary } = require('../middlewares/multerConfig')
 
 const postCtrl = {}
@@ -13,14 +12,15 @@ postCtrl.create = async (req, res) => {
 
     try {
         const body = req.body
-        if(req.file){
+        if (req.file) {
             const result = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream(
-                    { folder: 'blog_website/post_images',
-                    quality: 'auto',
-                    transformation: [
-                        {width: 800, crop: 'limit'}
-                    ]
+                    {
+                        folder: 'blog_website/post_images',
+                        quality: 'auto',
+                        transformation: [
+                            { width: 800, crop: 'limit' }
+                        ]
                     },
                     (err, result) => {
                         if (err) {
@@ -96,14 +96,15 @@ postCtrl.update = async (req, res) => {
     try {
         const body = req.body
         const postId = req.params.id
-        if(req.file){
+        if (req.file) {
             const result = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream(
-                    { folder: 'blog_website/post_images',
-                    quality: 'auto',
-                    transformation: [
-                        {width: 800, crop: 'limit'}
-                    ]
+                    {
+                        folder: 'blog_website/post_images',
+                        quality: 'auto',
+                        transformation: [
+                            { width: 800, crop: 'limit' }
+                        ]
                     },
                     (err, result) => {
                         if (err) {
@@ -117,13 +118,20 @@ postCtrl.update = async (req, res) => {
             body.bannerImage = result.secure_url
         }
         const post = await Post.findById(postId)
-        if (parseInt(post.author) === parseInt(req.user.id)) {
-            const updatePost = await Post.findByIdAndUpdate(postId, body, { new: true })
-            return res.status(200).json(updatePost)
-        } else {
-            return res.status(500).json({ errors: "You're not authorized to update" })
+
+        if (!post) {
+            return res.status(404).json({ errors: "Post not found" })
         }
+
+        if (post.author._id.toString() !== req.user.id.toString()) {
+            return res.status(403).json({ errors: "You're not authorized to update" })
+        }
+
+        const updatePost = await Post.findByIdAndUpdate(postId, body, { new: true })
+        return res.status(200).json(updatePost)
+        
     } catch (err) {
+        console.log(err)
         res.status(500).json({ errors: 'Something went wrong' })
     }
 }
