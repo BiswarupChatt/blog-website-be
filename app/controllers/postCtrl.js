@@ -13,6 +13,26 @@ postCtrl.create = async (req, res) => {
 
     try {
         const body = req.body
+        if(req.file){
+            const result = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: 'blog_website/post_images',
+                    quality: 'auto',
+                    transformation: [
+                        {width: 800, crop: 'limit'}
+                    ]
+                    },
+                    (err, result) => {
+                        if (err) {
+                            reject(err)
+                        } else {
+                            resolve(result)
+                        }
+                    }
+                ).end(req.file.buffer)
+            })
+            body.bannerImage = result.secure_url
+        }
         const post = new Post(body)
         post.author = req.user.id
         await post.save()
@@ -74,8 +94,28 @@ postCtrl.update = async (req, res) => {
     }
 
     try {
-        const body = _.pick(req.body, ['title', 'content'])
+        const body = req.body
         const postId = req.params.id
+        if(req.file){
+            const result = await new Promise((resolve, reject) => {
+                cloudinary.uploader.upload_stream(
+                    { folder: 'blog_website/post_images',
+                    quality: 'auto',
+                    transformation: [
+                        {width: 800, crop: 'limit'}
+                    ]
+                    },
+                    (err, result) => {
+                        if (err) {
+                            reject(err)
+                        } else {
+                            resolve(result)
+                        }
+                    }
+                ).end(req.file.buffer)
+            })
+            body.bannerImage = result.secure_url
+        }
         const post = await Post.findById(postId)
         if (parseInt(post.author) === parseInt(req.user.id)) {
             const updatePost = await Post.findByIdAndUpdate(postId, body, { new: true })
@@ -108,52 +148,7 @@ postCtrl.delete = async (req, res) => {
     }
 }
 
-postCtrl.bannerImageUpdate = async (req, res) => {
-    const errors = validationResult(req)
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() })
-    }
 
-    try {
-        if (req.file) {
-            const body = _.pick(req.body, ['bannerImage'])
-
-            const result = await new Promise((resolve, reject) => {
-                cloudinary.uploader.upload_stream(
-                    { folder: 'blog_website/post_images',
-                    quality: 'auto',
-                    transformation: [
-                        {width: 800, crop: 'limit'}
-                    ]
-                    },
-                    (err, result) => {
-                        if (err) {
-                            reject(err)
-                        } else {
-                            resolve(result)
-                        }
-                    }
-                ).end(req.file.buffer)
-            })
-            body.bannerImage = result.secure_url
-
-            const postId = req.params.id
-            const post = await Post.findById(postId)
-
-            if (parseInt(post.author) === parseInt(req.user.id)) {
-                const update = await Post.findByIdAndUpdate(postId, body, { new: true })
-                return res.status(200).json(update)
-            } else {
-                return res.status(500).json({ errors: "You're not authorized to update image" })
-            }
-
-        } else {
-            return res.status(500).json({ errors: "Unable to find image" })
-        }
-    } catch (err) {
-        res.status(500).json({ errors: 'Something went wrong' })
-    }
-}
 
 
 module.exports = postCtrl
