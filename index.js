@@ -43,6 +43,7 @@ app.delete('/api/posts/:id', authenticateUser, postCtrl.delete)
 
 app.post('/api/posts/:postId/comments', authenticateUser, checkSchema(commentValidations), commentCtrl.create)
 app.get('/api/posts/:postId/comments', commentCtrl.find)
+app.get('/api/posts/:postId/comments/:commentId', commentCtrl.findById)
 app.put('/api/posts/:postId/comments/:commentId', authenticateUser, checkSchema(commentValidations), commentCtrl.update)
 app.delete('/api/posts/:postId/comments/:commentId', authenticateUser, commentCtrl.delete)
 

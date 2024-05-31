@@ -36,6 +36,22 @@ commentCtrl.find = async (req, res) => {
     }
 }
 
+commentCtrl.findById = async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() })
+    }
+
+    try {
+        const commentId = req.params.commentId
+        const comment = await Comment.findById(commentId).populate('author', 'firstName lastName email').populate('post', 'title')
+        res.status(201).json(comment)
+    } catch (err) {
+        res.status(400).json({ errors: 'Something went wrong' })
+    }
+}
+
+
 commentCtrl.update = async (req, res) => {
     const errors = validationResult(req)
     if (!errors.isEmpty()) {
