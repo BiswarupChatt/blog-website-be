@@ -29,7 +29,7 @@ app.use(morgan('dev'))
 app.use(cors())
 
 
-app.post('/api/users/register', userCtrl.register)
+app.post('/api/users/register', checkSchema(userRegisterValidation), userCtrl.register)
 app.post('/api/users/login', checkSchema(userLoginValidation), userCtrl.login)
 app.get('/api/users/profile', authenticateUser, userCtrl.account)
 app.put('/api/users/profile', authenticateUser, checkSchema(userUpdateValidation), userCtrl.update)
