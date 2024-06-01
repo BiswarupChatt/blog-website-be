@@ -28,7 +28,8 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use(cors())
 
-app.post('/api/users/register', checkSchema(userRegisterValidation), userCtrl.register)
+
+app.post('/api/users/register', userCtrl.register)
 app.post('/api/users/login', checkSchema(userLoginValidation), userCtrl.login)
 app.get('/api/users/profile', authenticateUser, userCtrl.account)
 app.put('/api/users/profile', authenticateUser, checkSchema(userUpdateValidation), userCtrl.update)
@@ -46,7 +47,7 @@ app.get('/api/posts/:postId/comments', commentCtrl.find)
 app.get('/api/posts/:postId/comments/:commentId', commentCtrl.findById)
 app.put('/api/posts/:postId/comments/:commentId', authenticateUser, checkSchema(commentValidations), commentCtrl.update)
 app.delete('/api/posts/:postId/comments/:commentId', authenticateUser, commentCtrl.delete)
-
+ 
 app.listen(port, () => {
     console.log(`server is running successfully on this url http://localhost:${port}`)
 })
